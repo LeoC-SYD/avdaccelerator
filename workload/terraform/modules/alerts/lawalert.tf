@@ -1,8 +1,14 @@
 module "avdi" {
-  source      = "../insights"
-  avdLocation = var.avdLocation
-  prefix      = var.prefix
-  rg_avdi     = var.rg_avdi
+  source                                      = "../insights"
+  resource_group_name                         = var.resource_group_name
+  name                                        = var.name
+  monitor_data_collection_rule_data_flow      = var.monitor_data_collection_rule_data_flow
+  monitor_data_collection_rule_name           = var.monitor_data_collection_rule_name
+  monitor_data_collection_rule_resource_group_name = var.monitor_data_collection_rule_resource_group_name
+  monitor_data_collection_rule_location       = var.monitor_data_collection_rule_location
+  target_resource_id                          = var.target_resource_id
+  monitor_data_collection_rule_association_target_resource_id = var.monitor_data_collection_rule_association_target_resource_id
+  monitor_data_collection_rule_destinations   = var.monitor_data_collection_rule_destinations
 }
 
 data "azurerm_log_analytics_workspace" "lawksp" {

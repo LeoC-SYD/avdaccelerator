@@ -130,7 +130,7 @@ az keyvault secret set --vault-name "<Azure Virtual Desktopkeyvaultdemo>" --name
 - [Powershell VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell)
 - [HashiCorp Terraform VS Code Extension](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform)
 - [Azure Terraform VS Code Extension Name](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform)
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli-windows?tabs=azure-cli
+- [Azure CLI](<https://learn.microsoft.com/cli/azure/install-azure-cli-windows?tabs=azure-cli>
 - [Configure the Azure Terraform Visual Studio Code extension](https://learn.microsoft.com/azure/developer/terraform/configure-vs-code-extension-for-terraform?tabs=azure-cli)
 - [Setup video](https://youtu.be/YmbmpGdhI6w)
 

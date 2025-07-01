@@ -22,7 +22,7 @@ resource "azurerm_subnet" "pesubnet" {
   resource_group_name                       = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}"
   virtual_network_name                      = azurerm_virtual_network.vnet.name
   address_prefixes                          = var.pesubnet_range
-  private_endpoint_network_policies = "Enabled"
+  # private_endpoint_network_policies = "Enabled"
   service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault"]
   depends_on                                = [azurerm_resource_group.net]
 }
@@ -101,6 +101,9 @@ resource "azurerm_virtual_network_peering" "peer3" {
     azurerm_virtual_network_peering.peer2
   ]
 }
+
+# optional - Creates the Azure Bastion Host assuming you have a bastion in the hub
+
 
 # optional - Creates the Azure Virtual Desktop Firewall Rules assuming you have a firewall in the hub
 /*

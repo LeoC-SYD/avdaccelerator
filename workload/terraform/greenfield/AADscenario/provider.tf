@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     azurerm = {
@@ -19,10 +20,21 @@ terraform {
       source = "hashicorp/time"
     }
   }
+  backend "azurerm" {
+    use_azuread_auth     = true    
+    client_id = "c3289f55-258c-4442-b42e-c4c51af48fb7"
+    client_secret = var.client_secret
+    tenant_id                  = "c05f7306-c76e-493f-8be0-c73c616ead5e"
+    resource_group_name  = "rg-syd-tf-prod-frc-001"
+    storage_account_name       = "stsydtfprod001"
+    container_name             = "tfstate-defaults"
+    key                        = "terraform.tfstate"
+  }
+
 }
 
 provider "azurerm" {
-  partner_id = "89c34160-547d-11ed-baa8-6fad1bf031a2"
+  partner_id = "49f4cdfa-97bf-4dde-94b0-957dc9321bad"
   features {
     key_vault {
       purge_soft_deleted_secrets_on_destroy      = false

@@ -76,3 +76,10 @@ nsg    = "nsg-avd"    #nsg-avd-<azure region>-<prefix>-<nnn> Network Security Gr
 vnet   = "vnet-avd"   #vnet-avd-<azure region>-<prefix>-<nnn> Virtual Network
 snet   = "snet-avd"   #snet-avd-<azure region>-<prefix>-<nnn> Subnet
 pesnet = "pesnet-avd" #snet-avd-<azure region>-<prefix>-<nnn> Private Endpoint Subnet
+
+
+# BackEnd configuration
+state_resource_group_name  = "your_resource_group_name"
+state_storage_account_name = "your_storage_account_name"
+state_container_name       = "your_container_name"
+state_key                  = "terraform.tfstate"

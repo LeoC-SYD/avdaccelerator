@@ -15,13 +15,12 @@ resource "azurerm_storage_account" "storage" {
   account_tier              = "Premium"
   account_replication_type  = "LRS"
   account_kind              = "FileStorage"
-  enable_https_traffic_only = true
   tags                      = local.tags
   identity {
     type = "SystemAssigned"
   }
   azure_files_authentication {
-    directory_type = "AADKERB"
+    directory_type = "AADKERB"  
   }
   lifecycle {
     ignore_changes = [

@@ -1,3 +1,30 @@
+variable "tenant_id" {
+  type        = string
+  description = "Tenant ID of the Azure Active Directory"
+  
+}
+
+variable "state_resource_group_name" {
+  type        = string
+  description = "Name of the resource group for the Terraform state storage"
+}
+
+variable "state_storage_account_name" {
+  type        = string
+  description = "Name of the storage account for the Terraform state"
+}
+
+variable "state_container_name" {
+  type        = string
+  description = "Name of the container for the Terraform state"
+}
+
+variable "state_key" {
+  type        = string
+  description = "Key for the Terraform state file"
+  default     = "terraform.tfstate"
+}
+
 variable "avdLocation" {
   description = "Location of the resource group."
 }

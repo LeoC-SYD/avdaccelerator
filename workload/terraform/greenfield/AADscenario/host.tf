@@ -17,7 +17,6 @@ resource "azurerm_network_interface" "avd_vm_nic" {
   name                           = "${var.prefix}-${count.index + 1}-nic"
   resource_group_name            = azurerm_resource_group.shrg.name
   location                       = azurerm_resource_group.shrg.location
-  accelerated_networking_enabled = true
 
   ip_configuration {
     name                          = "nic${count.index + 1}_config"
@@ -40,7 +39,8 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   provision_vm_agent         = true
   admin_username             = var.local_admin_username
   admin_password             = azurerm_key_vault_secret.localpassword.value
-  encryption_at_host_enabled = true //'Microsoft.Compute/EncryptionAtHost' feature is must be enabled in the subscription for this setting to work https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-host-based-encryption-portal?tabs=azure-powershell
+  
+  # encryption_at_host_enabled = true //'Microsoft.Compute/EncryptionAtHost' feature is must be enabled in the subscription for this setting to work https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-host-based-encryption-portal?tabs=azure-powershell
 
   os_disk {
     name                 = "${lower(var.prefix)}-${count.index + 1}"
@@ -75,7 +75,7 @@ resource "azurerm_virtual_machine_extension" "aadjoin" {
   virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Azure.ActiveDirectory"
   type                       = "AADLoginForWindows"
-  type_handler_version       = "1.0"
+  type_handler_version       = "2.0"
   auto_upgrade_minor_version = true
 
   /*
@@ -107,7 +107,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
 PROTECTED_SETTINGS
   settings                   = <<-SETTINGS
     {
-      "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02714.342.zip",
+      "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02990.697.zip",
       "configurationFunction": "Configuration.ps1\\AddSessionHost",
       "properties": {
         "HostPoolName":"${module.avm_res_desktopvirtualization_hostpool.resource.name}"

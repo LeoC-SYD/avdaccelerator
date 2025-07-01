@@ -43,7 +43,7 @@ data "azurerm_role_definition" "power_role" {
 }
 
 data "azuread_service_principal" "spn" {
-  application_id = "9cdead84-a844-4324-93f2-b2e6bb768d07"
+  object_id = "9cdead84-a844-4324-93f2-b2e6bb768d07"
 }
 
 resource "azurerm_role_assignment" "power" {
@@ -107,71 +107,46 @@ resource "azurerm_monitor_diagnostic_setting" "avd-hp1" {
   enabled_log {
     category = "Checkpoint"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
   }
 
   enabled_log {
     category = "Error"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
   enabled_log {
     category = "Management"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "Connection"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
   enabled_log {
     category = "HostRegistration"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "AgentHealthStatus"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "NetworkData"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "SessionHostManagement"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 }
 
@@ -188,27 +163,18 @@ resource "azurerm_monitor_diagnostic_setting" "avd-pag1" {
   enabled_log {
     category = "Checkpoint"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "Error"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
   enabled_log {
     category = "Management"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 }
 
@@ -225,35 +191,23 @@ resource "azurerm_monitor_diagnostic_setting" "avd-wksp1" {
   enabled_log {
     category = "Checkpoint"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "Error"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
   enabled_log {
     category = "Management"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 
   enabled_log {
     category = "Feed"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
+
   }
 }
