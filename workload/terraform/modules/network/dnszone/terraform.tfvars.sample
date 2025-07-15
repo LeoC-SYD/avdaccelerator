@@ -4,3 +4,4 @@ prefix      = "mod2"
 rg_network  = "network"  #rg-avd-<location>-<prefix>-network
 vnet        = "vnet-avd" #vnet-avd-<azure region>-<prefix>-<nnn>
 snet        = "snet-avd" #snet-avd-<azure region>-<prefix>-<nnn>
+spoke_subscription_id = "00000000-0000-0000-0000-000000000000" # ID de l'abonnement spoke

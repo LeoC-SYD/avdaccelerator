@@ -14,7 +14,7 @@ resource "azurerm_storage_account" "azfile" {
   name                      = local.storage_name
   resource_group_name       = azurerm_resource_group.rg.name
   account_kind              = "FileStorage"
-  enable_https_traffic_only = true
+  # enable_https_traffic_only = true
   min_tls_version           = "TLS1_2"
   tags                      = local.tags
 

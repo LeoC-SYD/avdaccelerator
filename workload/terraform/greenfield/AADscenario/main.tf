@@ -36,14 +36,26 @@ module "avm_res_operationalinsights_workspace" {
 
 module "avm_res_desktopvirtualization_hostpool" {
   source  = "Azure/avm-res-desktopvirtualization-hostpool/azurerm"
-  version = "0.1.4"
+  version = "0.4.0"
 
   virtual_desktop_host_pool_location                 = azurerm_resource_group.this.location
   virtual_desktop_host_pool_name                     = "${var.hostpool}-${var.prefix}-${var.environment}"
   virtual_desktop_host_pool_type                     = "Pooled" // "Personal" or "Pooled"
   virtual_desktop_host_pool_resource_group_name      = azurerm_resource_group.this.name
   virtual_desktop_host_pool_load_balancer_type       = "BreadthFirst" // "DepthFirst" or "BreadthFirst"
-  virtual_desktop_host_pool_custom_rdp_properties    = "drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;use multimon:i:0"
+  virtual_desktop_host_pool_custom_rdp_properties    = {
+    drivestoredirect    = "*"
+    audiomode           = 0
+    videoplaybackmode   = 1
+    redirectclipboard   = 1
+    redirectprinters    = 1
+    devicestoredirect   = "*"
+    redirectcomports    = 1
+    redirectsmartcards  = 1
+    usbdevicestoredirect = "*"
+    enablecredsspsupport = 1
+    use_multimon        = 0
+  }
   virtual_desktop_host_pool_maximum_sessions_allowed = 16
   virtual_desktop_host_pool_start_vm_on_connect      = true
   resource_group_name                                = azurerm_resource_group.this.name
@@ -84,13 +96,12 @@ resource "azurerm_role_assignment" "this" {
 module "avm_res_desktopvirtualization_applicationgroup" {
   source                                                = "Azure/avm-res-desktopvirtualization-applicationgroup/azurerm"
   enable_telemetry                                      = var.enable_telemetry
-  version                                               = "0.1.2"
+  version                                               = "0.2.1"
   virtual_desktop_application_group_name                = "${var.dag}-${var.prefix}-${var.environment}-01"
   virtual_desktop_application_group_type                = "Desktop"
   virtual_desktop_application_group_host_pool_id        = module.avm_res_desktopvirtualization_hostpool.resource.id
   virtual_desktop_application_group_resource_group_name = azurerm_resource_group.this.name
   virtual_desktop_application_group_location            = azurerm_resource_group.this.location
-  user_group_name                                       = var.user_group_name
   virtual_desktop_application_group_tags                = local.tags
 }
 
@@ -152,7 +163,7 @@ resource "azurerm_storage_account" "this" {
 module "avm_res_desktopvirtualization_scaling_plan" {
   source                                           = "Azure/avm-res-desktopvirtualization-scalingplan/azurerm"
   enable_telemetry                                 = var.enable_telemetry
-  version                                          = "0.1.2"
+  version                                          = "0.2.1"
   virtual_desktop_scaling_plan_name                = "${var.scplan}-${var.prefix}-${var.environment}-${var.avdLocation}-01"
   virtual_desktop_scaling_plan_location            = azurerm_resource_group.this.location
   virtual_desktop_scaling_plan_resource_group_name = azurerm_resource_group.this.name

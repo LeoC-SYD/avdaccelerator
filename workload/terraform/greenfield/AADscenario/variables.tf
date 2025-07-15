@@ -4,6 +4,13 @@ variable "tenant_id" {
   
 }
 
+variable "client_secret" {
+  type        = string
+  description = "Client secret for the Azure Active Directory application"
+  sensitive   = true
+  
+}
+
 variable "state_resource_group_name" {
   type        = string
   description = "Name of the resource group for the Terraform state storage"

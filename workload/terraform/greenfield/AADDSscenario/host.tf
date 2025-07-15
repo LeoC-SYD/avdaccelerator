@@ -23,6 +23,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
     subnet_id                     = data.azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
   }
+  
 
   depends_on = [
     azurerm_resource_group.shrg
@@ -179,4 +180,8 @@ resource "azurerm_virtual_machine_extension" "mal" {
     azurerm_virtual_machine_extension.vmext_dsc,
     azurerm_virtual_machine_extension.mma
   ]
+
+  lifecycle {
+    
+  }
 }

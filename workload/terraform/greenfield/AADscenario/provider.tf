@@ -2,7 +2,8 @@
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
+      version = "= 4.36.0"
     }
     azuread = {
       source = "hashicorp/azuread"
@@ -19,13 +20,16 @@ terraform {
     time = {
       source = "hashicorp/time"
     }
+    null = {
+      source = "hashicorp/null"
+    }
   }
   backend "azurerm" {
-    use_azuread_auth     = true    
-    client_id = "c3289f55-258c-4442-b42e-c4c51af48fb7"
-    client_secret = var.client_secret
+    use_azuread_auth           = true    
+    client_id                  = "c3289f55-258c-4442-b42e-c4c51af48fb7"
+    # client_secret will be provided at initialization
     tenant_id                  = "c05f7306-c76e-493f-8be0-c73c616ead5e"
-    resource_group_name  = "rg-syd-tf-prod-frc-001"
+    resource_group_name        = "rg-syd-tf-prod-frc-001"
     storage_account_name       = "stsydtfprod001"
     container_name             = "tfstate-defaults"
     key                        = "terraform.tfstate"
@@ -35,6 +39,7 @@ terraform {
 
 provider "azurerm" {
   partner_id = "49f4cdfa-97bf-4dde-94b0-957dc9321bad"
+  subscription_id = var.spoke_subscription_id
   features {
     key_vault {
       purge_soft_deleted_secrets_on_destroy      = false
@@ -49,7 +54,7 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  skip_provider_registration = true
+  # skip_provider_registration = true
 }
 
 provider "azurerm" {

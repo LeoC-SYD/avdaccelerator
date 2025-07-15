@@ -29,29 +29,14 @@ module "avm-res-keyvault-vault" {
   network_acls = {
     bypass         = "AzureServices"
     default_action = "Deny"
-    ip_rules       = ["136.28.83.128", "90.115.63.18"]
+    ip_rules       = ["136.28.83.128", "90.115.63.18", "92.92.163.27"]
     virtual_network_subnet_ids = [
       data.azurerm_subnet.pesubnet.id
     ]
   }
-
-  keys = {
-    cmk_for_storage_account = {
-      key_opts = [
-        "decrypt",
-        "encrypt",
-        "sign",
-        "unwrapKey",
-        "verify",
-        "wrapKey"
-      ]
-
-      key_type     = "RSA"
-      key_vault_id = module.avm-res-keyvault-vault.resource.id
-      name         = "cmk-for-storage-account"
-      key_size     = 2048
-    }
-  }
+  
+  # Les clés seront créées séparément après le délai de propagation RBAC
+  keys = {}
 }
 
 # Generate VM local password
@@ -68,7 +53,7 @@ resource "azurerm_key_vault_secret" "localpassword" {
   content_type = "Password"
 
   depends_on = [
-    azurerm_role_assignment.keystor
+    time_sleep.wait_for_rbac_propagation
   ]
 
   lifecycle {
@@ -83,3 +68,25 @@ resource "azurerm_role_assignment" "keystor" {
   role_definition_name = "Key Vault Administrator"
 }
 
+# Délai d'attente pour la propagation des permissions RBAC
+resource "time_sleep" "wait_for_rbac_propagation" {
+  depends_on      = [azurerm_role_assignment.keystor]
+  create_duration = "90s"
+}
+
+# Créer la clé CMK pour le compte de stockage après la propagation RBAC
+resource "azurerm_key_vault_key" "cmk_for_storage_account" {
+  depends_on   = [time_sleep.wait_for_rbac_propagation]
+  name         = "cmk-for-storage-account"
+  key_vault_id = module.avm-res-keyvault-vault.resource.id
+  key_type     = "RSA"
+  key_size     = 2048
+  key_opts     = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey"
+  ]
+}

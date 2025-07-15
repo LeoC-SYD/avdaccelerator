@@ -1,7 +1,8 @@
 resource "azurerm_route_table" "udr" {
   name                          = "rt-${substr(var.avdLocation, 0, 5)}-${var.prefix}-001" #route-avd-{AzureRegionAcronym}-{deploymentPrefix}-{nnn}
   location                      = azurerm_resource_group.net.location
-  resource_group_name           = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}"
+  resource_group_name           = azurerm_resource_group.net.name
+  provider                      = azurerm.spoke
   # disable_bgp_route_propagation = false
   
   tags                          = local.tags

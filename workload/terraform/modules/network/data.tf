@@ -1,6 +1,10 @@
-data "azurerm_subscription" "current" {}
+data "azurerm_subscription" "current" {
+  provider = azurerm.spoke
+}
 
-data "azurerm_client_config" "current" {}
+data "azurerm_client_config" "current" {
+  provider = azurerm.spoke
+}
 
 data "azurerm_virtual_network" "remote" {
   provider            = azurerm.hub

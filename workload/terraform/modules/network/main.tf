@@ -4,7 +4,10 @@ resource "azurerm_virtual_network" "vnet" {
   location            = azurerm_resource_group.net.location
   resource_group_name = azurerm_resource_group.net.name
   tags                = local.tags
-  lifecycle { ignore_changes = [tags] }
+  lifecycle { 
+    ignore_changes = [tags]
+    create_before_destroy = true
+  }
 
   depends_on = [azurerm_resource_group.net]
 }
@@ -14,7 +17,10 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name                       = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}"
   virtual_network_name                      = azurerm_virtual_network.vnet.name
   address_prefixes                          = var.subnet_range
-  depends_on                                = [azurerm_resource_group.net]
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on                                = [azurerm_resource_group.net, azurerm_virtual_network.vnet]
 }
 
 resource "azurerm_subnet" "pesubnet" {
@@ -24,15 +30,26 @@ resource "azurerm_subnet" "pesubnet" {
   address_prefixes                          = var.pesubnet_range
   # private_endpoint_network_policies = "Enabled"
   service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault"]
-  depends_on                                = [azurerm_resource_group.net]
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on                                = [azurerm_resource_group.net, azurerm_virtual_network.vnet]
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
   subnet_id                 = azurerm_subnet.subnet.id
   network_security_group_id = azurerm_network_security_group.res-0.id
   depends_on = [
-    azurerm_subnet.subnet
+    azurerm_subnet.subnet,
+    azurerm_network_security_group.res-0,
+    azurerm_virtual_network.vnet
   ]
+  provider = azurerm.spoke
+  
+  timeouts {
+    create = "60m"
+    delete = "2h"
+  }
 }
 
 resource "azurerm_virtual_network_peering" "peer1" {
