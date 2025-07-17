@@ -55,6 +55,10 @@ module "avm_res_desktopvirtualization_hostpool" {
     usbdevicestoredirect = "*"
     enablecredsspsupport = 1
     use_multimon        = 0
+    custom_rdp_properties = {
+      "enablerdsaadauth" = "i:1" 
+    }
+
   }
   virtual_desktop_host_pool_maximum_sessions_allowed = 16
   virtual_desktop_host_pool_start_vm_on_connect      = true

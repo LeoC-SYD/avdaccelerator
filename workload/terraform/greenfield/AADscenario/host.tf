@@ -69,37 +69,10 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   ]
 }
 
-# S'assurer que la VM est démarrée avant d'installer les extensions
-
-# Extension simple pour vérifier que la VM est prête pour les autres extensions
-# resource "azurerm_virtual_machine_extension" "vm_startup" {
-#   count                      = var.rdsh_count
-#   name                       = "${var.prefix}-${count.index + 1}-startup-${formatdate("YYYYMMDDhhmmss", timestamp())}"
-#   virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
-#   publisher                  = "Microsoft.Compute"
-#   type                       = "CustomScriptExtension"
-#   type_handler_version       = "1.10"
-#   auto_upgrade_minor_version = true
-  
-#   settings = <<SETTINGS
-#     {
-#       "commandToExecute": "powershell.exe -Command \"Write-Host 'VM is ready for extensions'\""
-#     }
-#   SETTINGS
-  
-#   timeouts {
-#     create = "15m"
-#     delete = "15m"
-#   }
-  
-#   depends_on = [
-#     azurerm_windows_virtual_machine.avd_vm
-#   ]
-# }
 
 resource "azurerm_virtual_machine_extension" "aadjoin" {
   count                      = var.rdsh_count
-  name                       = "${var.prefix}-${count.index + 1}-aadJoin"
+  name                       = "aadjoin"
   virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Azure.ActiveDirectory"
   type                       = "AADLoginForWindows"
@@ -113,11 +86,13 @@ resource "azurerm_virtual_machine_extension" "aadjoin" {
   
   lifecycle {
     ignore_changes = [
-      name
+      name,
+      settings,
+      protected_settings,
+      tags
     ]
   }
   
-  /*
 # Uncomment out settings for Intune
   settings = <<SETTINGS
 
@@ -125,7 +100,6 @@ resource "azurerm_virtual_machine_extension" "aadjoin" {
         "mdmId" : "0000000a-0000-0000-c000-000000000000"
       }
 SETTINGS
-*/
 }
 
 # Délai supplémentaire après AADJoin pour éviter les conflits d'opérations
@@ -141,7 +115,7 @@ resource "time_sleep" "wait_after_aad_join" {
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   count = var.rdsh_count
 
-  name                       = "${var.prefix}${count.index + 1}-avd_dsc"
+  name                       = "avd_dsc"
   publisher                  = "Microsoft.Powershell"
   type                       = "DSC"
   type_handler_version       = "2.73"
@@ -150,7 +124,10 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   
   lifecycle {
     ignore_changes = [
-      name
+      name,
+      settings,
+      protected_settings,
+      tags
     ]
   }
   
@@ -197,7 +174,7 @@ resource "time_sleep" "wait_after_dsc" {
 resource "azurerm_virtual_machine_extension" "ama" {
   count = var.rdsh_count
 
-  name                      = "AzureMonitorWindowsAgent"
+  name                      = "ama"
   publisher                 = "Microsoft.Azure.Monitor"
   type                      = "AzureMonitorWindowsAgent"
   type_handler_version      = "1.22"
@@ -206,7 +183,10 @@ resource "azurerm_virtual_machine_extension" "ama" {
   
   lifecycle {
     ignore_changes = [
-      name
+      name,
+      settings,
+      protected_settings,
+      tags
     ]
   }
   
@@ -231,7 +211,7 @@ resource "time_sleep" "wait_after_ama" {
 
 # Microsoft Antimalware
 resource "azurerm_virtual_machine_extension" "mal" {
-  name                       = "IaaSAntimalware"
+  name                       = "antimalware"
   count                      = var.rdsh_count
   virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Azure.Security"
