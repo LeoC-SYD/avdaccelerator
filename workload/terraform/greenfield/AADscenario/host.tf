@@ -67,6 +67,11 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     azurerm_resource_group.shrg,
     azurerm_resource_group.rg
   ]
+  
+  # Add a lifecycle block to ensure this is deleted before the host pool
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 
@@ -129,6 +134,8 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
       protected_settings,
       tags
     ]
+    # Ajout de cette directive pour garantir la suppression des VMs avant le host pool
+    create_before_destroy = true
   }
   
   protected_settings         = <<PROTECTED_SETTINGS
@@ -148,9 +155,10 @@ PROTECTED_SETTINGS
     }
 SETTINGS
 
+  # Le DSC a besoin de l'enregistrement du host pool mais nous devons éviter les cycles
+  # En gardant uniquement la dépendance sur time_sleep.wait_after_aad_join
   depends_on = [
-    time_sleep.wait_after_aad_join,
-    azurerm_virtual_desktop_host_pool_registration_info.registrationinfo
+    time_sleep.wait_after_aad_join
   ]
   
   timeouts {
@@ -188,10 +196,12 @@ resource "azurerm_virtual_machine_extension" "ama" {
       protected_settings,
       tags
     ]
+    create_before_destroy = true
   }
   
+  # Supprimer la dépendance sur time_sleep.wait_after_dsc pour éviter les cycles
   depends_on = [
-    time_sleep.wait_after_dsc
+    azurerm_windows_virtual_machine.avd_vm
   ]
   
   timeouts {
@@ -223,9 +233,12 @@ resource "azurerm_virtual_machine_extension" "mal" {
     ignore_changes = [
       name
     ]
+    # Add this to help with deletion order
+    create_before_destroy = true
   }
 
+  # Supprimer la dépendance sur time_sleep.wait_after_ama pour éviter les cycles
   depends_on = [
-    time_sleep.wait_after_ama
+    azurerm_windows_virtual_machine.avd_vm
   ]
 }

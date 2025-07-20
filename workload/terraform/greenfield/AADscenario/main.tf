@@ -75,6 +75,12 @@ module "avm_res_desktopvirtualization_hostpool" {
 resource "azurerm_virtual_desktop_host_pool_registration_info" "registrationinfo" {
   expiration_date = timeadd(timestamp(), "48h")
   hostpool_id     = module.avm_res_desktopvirtualization_hostpool.resource.id
+  
+  # Add lifecycle to control deletion order
+  lifecycle {
+    create_before_destroy = true
+  }
+  
 }
 
 # Get an existing built-in role definition
@@ -125,6 +131,11 @@ module "avm_res_desktopvirtualization_workspace" {
 resource "azurerm_virtual_desktop_workspace_application_group_association" "workappgrassoc" {
   application_group_id = module.avm_res_desktopvirtualization_applicationgroup.resource.id
   workspace_id         = module.avm_res_desktopvirtualization_workspace.resource.id
+  
+  # Ensure proper deletion order
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Get the service principal for Azure Vitual Desktop
@@ -226,4 +237,9 @@ module "avm_res_desktopvirtualization_scaling_plan" {
       }
     ]
   )
+  
+  # Dépend uniquement du module hostpool
+  depends_on = [
+    module.avm_res_desktopvirtualization_hostpool
+  ]
 }
