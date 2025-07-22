@@ -50,6 +50,10 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
     create = "60m"
     delete = "2h"
   }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "azurerm_virtual_network_peering" "peer1" {

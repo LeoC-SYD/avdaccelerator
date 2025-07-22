@@ -56,7 +56,7 @@ module "avm_res_desktopvirtualization_hostpool" {
     enablecredsspsupport = 1
     use_multimon        = 0
     custom_rdp_properties = {
-      "enablerdsaadauth" = "i:1" 
+      "enablerdsaadauth:i:" = 1
     }
 
   }
@@ -70,10 +70,12 @@ module "avm_res_desktopvirtualization_hostpool" {
       hour_of_day = 0
     }])
   }
+
 }
 
 resource "azurerm_virtual_desktop_host_pool_registration_info" "registrationinfo" {
-  expiration_date = timeadd(timestamp(), "48h")
+  # Utiliser time_rotating pour forcer un nouveau jeton à chaque application
+  expiration_date = timeadd(time_rotating.avd_token.id, "48h")
   hostpool_id     = module.avm_res_desktopvirtualization_hostpool.resource.id
   
   # Add lifecycle to control deletion order
@@ -112,8 +114,48 @@ module "avm_res_desktopvirtualization_applicationgroup" {
   virtual_desktop_application_group_host_pool_id        = module.avm_res_desktopvirtualization_hostpool.resource.id
   virtual_desktop_application_group_resource_group_name = azurerm_resource_group.this.name
   virtual_desktop_application_group_location            = azurerm_resource_group.this.location
+  virtual_desktop_application_group_default_desktop_display_name = "Default Demo Desktop"
   virtual_desktop_application_group_tags                = local.tags
 }
+
+module "avm_res_desktopvirtualization_remote_applicationgroup" {
+  source                                                = "Azure/avm-res-desktopvirtualization-applicationgroup/azurerm"
+  enable_telemetry                                      = var.enable_telemetry
+  version                                               = "0.2.1"
+  virtual_desktop_application_group_name                = "${var.rag}-${var.prefix}-${var.environment}-01"
+  virtual_desktop_application_group_type                = "RemoteApp"
+  virtual_desktop_application_group_host_pool_id        = module.avm_res_desktopvirtualization_hostpool.resource.id
+  virtual_desktop_application_group_resource_group_name = azurerm_resource_group.this.name
+  virtual_desktop_application_group_location            = azurerm_resource_group.this.location
+  virtual_desktop_application_group_default_desktop_display_name = "Default Remote Application Group "
+  virtual_desktop_application_group_tags                = local.tags
+}
+
+
+resource "azurerm_virtual_desktop_application" "edge" {
+  application_group_id         = module.avm_res_desktopvirtualization_remote_applicationgroup.resource.id
+  command_line_argument_policy = "DoNotAllow"
+  name                         = "MicrosoftEdge"
+  path                         = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  command_line_arguments       = "--incognito"
+  description                  = "Microsoft Edge"
+  friendly_name                = "Microsoft Edge"
+  icon_index                   = 0
+  icon_path                    = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  show_in_portal               = false
+}
+
+resource "azurerm_virtual_desktop_application" "wordpad" {
+  application_group_id         = module.avm_res_desktopvirtualization_remote_applicationgroup.resource.id
+  command_line_argument_policy = "DoNotAllow"
+  name                         = "Explorer"
+  path                         = "C:\\Windows\\explorer.exe"
+  description                  = "Explorer application"
+  friendly_name                = "Explorer"
+  icon_index                   = 0
+  icon_path                    = "C:\\Windows\\explorer.exe"
+}
+
 
 # Create Azure Virtual Desktop workspace
 module "avm_res_desktopvirtualization_workspace" {
@@ -132,7 +174,15 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "work
   application_group_id = module.avm_res_desktopvirtualization_applicationgroup.resource.id
   workspace_id         = module.avm_res_desktopvirtualization_workspace.resource.id
   
-  # Ensure proper deletion order
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "azurerm_virtual_desktop_workspace_application_group_association" "remoteappassoc" {
+  application_group_id = module.avm_res_desktopvirtualization_remote_applicationgroup.resource.id
+  workspace_id         = module.avm_res_desktopvirtualization_workspace.resource.id
+  
   lifecycle {
     create_before_destroy = true
   }

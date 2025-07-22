@@ -127,6 +127,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   auto_upgrade_minor_version = true
   
+  
   lifecycle {
     ignore_changes = [
       name,
@@ -156,9 +157,10 @@ PROTECTED_SETTINGS
 SETTINGS
 
   # Le DSC a besoin de l'enregistrement du host pool mais nous devons éviter les cycles
-  # En gardant uniquement la dépendance sur time_sleep.wait_after_aad_join
+  # Ajout de la dépendance sur l'enregistrement pour s'assurer que le token est valide
   depends_on = [
-    time_sleep.wait_after_aad_join
+    time_sleep.wait_after_aad_join,
+    azurerm_virtual_desktop_host_pool_registration_info.registrationinfo
   ]
   
   timeouts {
