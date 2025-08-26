@@ -4,6 +4,8 @@ locals {
   allow_list_ip      = var.allow_list_ip
   white_list_ip      = ["0.0.0.0"]
   registration_token = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
+  join_username      = coalesce(var.aadds_username, var.dc_admin_username)
+  join_password      = coalesce(var.aadds_password, random_password.dc_admin.result)
   tags = {
     environment        = var.prefix
     source             = "https://github.com/Azure/avdaccelerator/tree/main/workload/terraform/avdbaseline"

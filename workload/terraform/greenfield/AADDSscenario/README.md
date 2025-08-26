@@ -34,7 +34,8 @@ terraform destroy
 | `avdLocation` | Azure region for all resources |
 | `prefix` | Short prefix used in resource names |
 | `aadds_domain_name` | Microsoft Entra Domain Services domain name |
-| `dc_admin_username` | Username for the domain join account |
+| `aadds_username` | Username for the domain join account |
+| `aadds_password` | (Optional) Password for the domain join account |
 | `rdsh_count` | Number of session host VMs |
 | `vm_size` | Size of the session host VMs |
 
