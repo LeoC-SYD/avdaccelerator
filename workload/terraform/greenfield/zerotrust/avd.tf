@@ -140,8 +140,7 @@ data "azurerm_log_analytics_workspace" "lawksp" {
     azurerm_virtual_desktop_workspace.workspace,
     azurerm_virtual_desktop_host_pool.hostpool,
     azurerm_virtual_desktop_application_group.dag,
-    azurerm_virtual_desktop_workspace_application_group_association.ws-dag,
-    module.avdi
+    azurerm_virtual_desktop_workspace_application_group_association.ws-dag
   ]
 }
 

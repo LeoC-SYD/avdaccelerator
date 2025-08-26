@@ -5,7 +5,7 @@ module "dcr" {
   monitor_data_collection_rule_resource_group_name            = azurerm_resource_group.mon.name
   name                                                        = "avddcr1"
   monitor_data_collection_rule_kind                           = "Windows"
-  monitor_data_collection_rule_location                       = azurerm_resource_group.this.location
+  monitor_data_collection_rule_location                       = azurerm_resource_group.mon.location
   monitor_data_collection_rule_name                           = "microsoft-avdi-eastus"
   monitor_data_collection_rule_association_target_resource_id = azurerm_windows_virtual_machine.avd_vm[0].id
   monitor_data_collection_rule_data_flow = [
