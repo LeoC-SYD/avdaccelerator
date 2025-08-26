@@ -264,8 +264,21 @@ variable "aadds_domain_name" {
   description = "Name of the Microsoft Entra Domain Services domain"
 }
 
+variable "aadds_username" {
+  type        = string
+  description = "Username for the domain join account (alias for dc_admin_username)"
+  default     = null
+}
+
+variable "aadds_password" {
+  type        = string
+  description = "Password for the domain join account. If null, a random password is generated."
+  sensitive   = true
+  default     = null
+}
+
 variable "dc_admin_username" {
   type        = string
-  description = "Username for the domain join account"
+  description = "Username for the domain join account (deprecated; use aadds_username)"
   default     = "aaddsadmin"
 }

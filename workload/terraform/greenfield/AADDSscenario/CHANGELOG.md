@@ -10,3 +10,4 @@
 - Fixed missing variable declarations and corrected resource references to prevent runtime errors.
 - Declared optional variables for remote app and personal host pool modules to avoid unexpected attribute errors.
 - Added comprehensive documentation in `README.md` for easier deployment and maintenance.
+- Introduced `aadds_username` and `aadds_password` variables to align with legacy configuration names.

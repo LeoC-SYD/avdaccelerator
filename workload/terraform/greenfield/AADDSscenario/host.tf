@@ -52,9 +52,9 @@ resource "random_password" "dc_admin" {
 }
 
 resource "azuread_user" "dc_admin" {
-  user_principal_name   = "${var.dc_admin_username}@${var.aadds_domain_name}"
+  user_principal_name   = "${local.join_username}@${var.aadds_domain_name}"
   display_name          = "AADDS Join Account"
-  password              = random_password.dc_admin.result
+  password              = local.join_password
   force_password_change = false
 }
 
@@ -79,7 +79,7 @@ resource "azurerm_virtual_machine_extension" "aaddsjoin" {
 
   protected_settings = <<-PROTECTED_SETTINGS
     {
-      "Password": "${random_password.dc_admin.result}"
+      "Password": "${local.join_password}"
     }
     PROTECTED_SETTINGS
 
