@@ -28,8 +28,8 @@ resource "azurerm_storage_share" "FSShare" {
   enabled_protocol = "SMB"
 
 
-  storage_account_name = azurerm_storage_account.storage.name
-  depends_on           = [azurerm_storage_account.storage]
+  storage_account_id = azurerm_storage_account.storage.id
+  depends_on         = [azurerm_storage_account.storage]
 }
 
 
