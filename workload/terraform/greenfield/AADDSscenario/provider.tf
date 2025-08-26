@@ -2,26 +2,27 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=3.44.1"
+      version = ">=3.100.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.25.0"
+      version = ">=2.48.0"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.3.2"
+      version = ">=3.5.0"
     }
     local = {
       source  = "hashicorp/local"
-      version = "~> 2.2.3"
+      version = ">=2.4.0"
     }
     azapi = {
-      source = "Azure/azapi"
+      source  = "Azure/azapi"
+      version = ">=2.0.0"
     }
     time = {
       source  = "hashicorp/time"
-      version = "~> 0.8.0"
+      version = ">=0.11.0"
     }
   }
 }
@@ -42,7 +43,6 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  skip_provider_registration = true
 }
 
 provider "azurerm" {
