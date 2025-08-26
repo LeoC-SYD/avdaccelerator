@@ -8,4 +8,5 @@
 - Added domain join user creation and associated variables to enable automated AADDS joins.
 - Added `source_image_id` for session host VMs and cleaned unused resources for clarity.
 - Fixed missing variable declarations and corrected resource references to prevent runtime errors.
+- Declared optional variables for remote app and personal host pool modules to avoid unexpected attribute errors.
 - Added comprehensive documentation in `README.md` for easier deployment and maintenance.

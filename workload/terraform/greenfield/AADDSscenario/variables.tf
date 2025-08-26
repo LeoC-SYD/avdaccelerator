@@ -12,6 +12,12 @@ variable "rg_stor" {
   description = "Name of the Resource group in which to deploy storage"
 }
 
+variable "rg_fslogix" {
+  type        = string
+  description = "Name of the Resource group in which to deploy FSLogix storage resources"
+  default     = null
+}
+
 variable "rg_network" {
   type        = string
   description = "Name of the Resource group in which to deploy network resources"
@@ -102,6 +108,42 @@ variable "workspace" {
 variable "hostpool" {
   type        = string
   description = "Name of the Azure Virtual Desktop host pool"
+}
+
+variable "ragworkspace" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop Remote Apps workspace"
+  default     = null
+}
+
+variable "raghostpool" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop Remote Apps host pool"
+  default     = null
+}
+
+variable "rag" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop Remote App group"
+  default     = null
+}
+
+variable "pworkspace" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop personal workspace"
+  default     = null
+}
+
+variable "personalpool" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop personal host pool"
+  default     = null
+}
+
+variable "pag" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop personal application group"
+  default     = null
 }
 
 variable "dns_servers" {
