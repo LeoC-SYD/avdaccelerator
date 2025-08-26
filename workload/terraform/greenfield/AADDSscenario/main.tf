@@ -1,11 +1,4 @@
 # Creates Azure Virtual Desktop Insights Log Analytics Workspace
-module "avdi" {
-  source      = "../../modules/insights"
-  avdLocation = var.avdLocation
-  prefix      = var.prefix
-  rg_avdi     = var.rg_avdi
-}
-
 # Creates the Azure Virtual Desktop Spoke Network resources
 module "network" {
   source                   = "../../modules/network"
@@ -47,7 +40,7 @@ module "poolremoteapp" {
   rg_shared_name = var.rg_shared_name
   prefix         = var.prefix
   rfc3339        = var.rfc3339
-  depends_on     = [module.avdi.avdLocation]
+  depends_on     = [azurerm_log_analytics_workspace.law]
 }
 */
 
@@ -65,7 +58,7 @@ module "personal" {
   prefix         = var.prefix
   rfc3339        = var.rfc3339
   pag            = "${var.pag}-${substr(var.avdLocation,0,5)}-${var.prefix}" //var.pag
-  depends_on     = [module.avdi.avdLocation]
+  depends_on     = [azurerm_log_analytics_workspace.law]
 }
 */
 

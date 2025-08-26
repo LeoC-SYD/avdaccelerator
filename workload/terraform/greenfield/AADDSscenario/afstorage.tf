@@ -8,15 +8,15 @@ resource "azurerm_user_assigned_identity" "mi" {
 ## https://docs.microsoft.com/azure/storage/common/storage-account-overview
 ## Create a File Storage Account 
 resource "azurerm_storage_account" "storage" {
-  name                      = local.storage_name
-  resource_group_name       = azurerm_resource_group.rg_storage.name
-  location                  = azurerm_resource_group.rg_storage.location
-  min_tls_version           = "TLS1_2"
-  account_tier              = "Premium"
-  account_replication_type  = "LRS"
-  account_kind              = "FileStorage"
-  enable_https_traffic_only = true
-  tags                      = local.tags
+  name                       = local.storage_name
+  resource_group_name        = azurerm_resource_group.rg_storage.name
+  location                   = azurerm_resource_group.rg_storage.location
+  min_tls_version            = "TLS1_2"
+  account_tier               = "Premium"
+  account_replication_type   = "LRS"
+  account_kind               = "FileStorage"
+  https_traffic_only_enabled = true
+  tags                       = local.tags
   identity {
     type = "SystemAssigned"
   }

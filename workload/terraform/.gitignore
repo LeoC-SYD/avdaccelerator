@@ -34,3 +34,4 @@ override.tf.json
 .terraformrc
 .infracost/terraform_modules
 .infracost/*
+!greenfield/AADDSscenario/.terraform.lock.hcl

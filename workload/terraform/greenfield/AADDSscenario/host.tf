@@ -47,7 +47,6 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     storage_account_type = "Standard_LRS"
   }
 
-  /*
   //source_image_id = data.azurerm_shared_image.avd.id
   source_image_id = "/subscriptions/${var.avdshared_subscription_id}/resourceGroups/${var.image_rg}/providers/Microsoft.Compute/galleries/${var.gallery_name}/images/${var.image_name}/versions/latest"
   depends_on = [
@@ -56,7 +55,6 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     azurerm_resource_group.rg,
     azurerm_virtual_desktop_host_pool.hostpool
   ]
-*/
   identity {
     type = "SystemAssigned"
   }
@@ -71,35 +69,21 @@ resource "azurerm_virtual_machine_extension" "aaddsjoin" {
   type_handler_version       = "1.3"
   auto_upgrade_minor_version = true
 
-  settings = <<-SETTINGS
-    {
-      "Name": "${azurerm_active_directory_domain_service.aadds.domain_name}",
-      "OUPath": "${var.ou_path}",
-      "User": "${azuread_user.dc_admin.user_principal_name}",
-      "Restart": "true",
-      "Options": "3"
-    }
-    SETTINGS
+  settings = jsonencode({
+    Name    = var.aadds_domain_name
+    OUPath  = var.ou_path
+    User    = var.aadds_username
+    Restart = "true"
+    Options = "3"
+  })
 
-  protected_settings = <<-PROTECTED_SETTINGS
-    {
-      "Password": "${random_password.dc_admin.result}"
-    }
-    PROTECTED_SETTINGS
+  protected_settings = jsonencode({
+    Password = var.aadds_password
+  })
 
   lifecycle {
     ignore_changes = [settings, protected_settings]
   }
-
-  /*
-# Uncomment out settings for Intune
-  settings = <<SETTINGS
-
-     {
-        "mdmId" : "0000000a-0000-0000-c000-000000000000"
-      }
-SETTINGS
-*/
 }
 
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
@@ -130,9 +114,9 @@ SETTINGS
 PROTECTED_SETTINGS
 
   depends_on = [
-    azurerm_virtual_machine_extension.aadjoin,
+    azurerm_virtual_machine_extension.aaddsjoin,
     azurerm_virtual_desktop_host_pool.hostpool,
-    data.azurerm_log_analytics_workspace.lawksp
+    azurerm_log_analytics_workspace.law
   ]
 }
 
@@ -147,20 +131,19 @@ resource "azurerm_virtual_machine_extension" "mma" {
   auto_upgrade_minor_version = true
   settings                   = <<SETTINGS
     {
-      "workspaceId": "${data.azurerm_log_analytics_workspace.lawksp.workspace_id}"
+      "workspaceId": "${azurerm_log_analytics_workspace.law.workspace_id}"
     }
       SETTINGS
 
   protected_settings = <<PROTECTED_SETTINGS
   {
-   "workspaceKey": "${data.azurerm_log_analytics_workspace.lawksp.primary_shared_key}"
+ "workspaceKey": "${azurerm_log_analytics_workspace.law.primary_shared_key}"
   }
 PROTECTED_SETTINGS
 
   depends_on = [
-    azurerm_virtual_machine_extension.aadjoin,
     azurerm_virtual_machine_extension.vmext_dsc,
-    data.azurerm_log_analytics_workspace.lawksp
+    azurerm_log_analytics_workspace.law
   ]
 }
 
@@ -175,7 +158,6 @@ resource "azurerm_virtual_machine_extension" "mal" {
   auto_upgrade_minor_version = "true"
 
   depends_on = [
-    azurerm_virtual_machine_extension.aadjoin,
     azurerm_virtual_machine_extension.vmext_dsc,
     azurerm_virtual_machine_extension.mma
   ]

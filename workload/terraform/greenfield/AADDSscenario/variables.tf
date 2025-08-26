@@ -210,3 +210,23 @@ variable "fw_policy" {
 variable "hub_dns_zone_rg" {
   description = "The resource group for the hub DNS zone"
 }
+
+variable "aadds_domain_name" {
+  type        = string
+  description = "FQDN of the Microsoft Entra Domain Services domain"
+}
+
+variable "aadds_username" {
+  type        = string
+  description = "Username with permissions to join machines to the AAD DS domain"
+}
+
+variable "aadds_password" {
+  type        = string
+  description = "Password for the AAD DS join user"
+  sensitive   = true
+}
+
+variable "ou_path" {
+  description = "Distinguished name of the organizational unit for session hosts"
+}
