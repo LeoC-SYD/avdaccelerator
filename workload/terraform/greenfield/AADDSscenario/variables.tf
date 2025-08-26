@@ -145,6 +145,12 @@ variable "local_admin_username" {
   description = "local admin username"
 }
 
+variable "ou_path" {
+  type        = string
+  description = "Distinguished name of the organizational unit for the session host"
+  default     = null
+}
+
 variable "image_name" {
   type        = string
   description = "Name of the custome image to use"
