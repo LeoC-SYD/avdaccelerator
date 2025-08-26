@@ -119,7 +119,9 @@ variable "offer" {
 }
 
 variable "ou_path" {
+  type        = string
   description = "Distinguished name of the organizational unit for the session host"
+  default     = null
 }
 
 variable "pag" {

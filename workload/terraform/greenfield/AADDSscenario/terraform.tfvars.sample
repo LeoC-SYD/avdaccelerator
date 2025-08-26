@@ -41,6 +41,7 @@ ws_log_categories        = ["Checkpoint", "Management", "Error", "Feed"]
 
 prefix                = "test"
 local_admin_username  = "localadmin" # Your AVD VM login id to manage username
+ou_path               = "OU=AVD,OU=AADDS,DC=contoso,DC=net" # optional
 vm_size               = "Standard_D8s_v5"
 vnet_range            = ["10.10.1.0/24"] #replace with your IP addresses
 subnet_range          = ["10.10.1.0/26"] #replace with your IP addresses
