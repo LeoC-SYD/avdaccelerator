@@ -1,9 +1,25 @@
 # Creates Azure Virtual Desktop Insights Log Analytics Workspace
-module "avdi" {
-  source      = "../../modules/insights"
-  avdLocation = var.avdLocation
-  prefix      = var.prefix
-  rg_avdi     = var.rg_avdi
+module "dcr" {
+  source                                                      = "../../modules/insights"
+  name                                                        = "avddcr1"
+  monitor_data_collection_rule_resource_group_name            = azurerm_resource_group.rg.name
+  monitor_data_collection_rule_location                       = azurerm_resource_group.rg.location
+  monitor_data_collection_rule_name                           = "microsoft-avdi-${var.avdLocation}"
+  monitor_data_collection_rule_association_target_resource_id = azurerm_windows_virtual_machine.avd_vm[0].id
+  monitor_data_collection_rule_data_flow = [
+    {
+      destinations = [data.azurerm_log_analytics_workspace.lawksp.name]
+      streams      = ["Microsoft-Perf", "Microsoft-Event"]
+    }
+  ]
+  monitor_data_collection_rule_destinations = {
+    log_analytics = {
+      name                  = data.azurerm_log_analytics_workspace.lawksp.name
+      workspace_resource_id = data.azurerm_log_analytics_workspace.lawksp.id
+    }
+  }
+  resource_group_name = azurerm_resource_group.rg.name
+  target_resource_id  = azurerm_windows_virtual_machine.avd_vm[0].id
 }
 
 # Creates the Azure Virtual Desktop Spoke Network resources
@@ -47,7 +63,7 @@ module "poolremoteapp" {
   rg_shared_name = var.rg_shared_name
   prefix         = var.prefix
   rfc3339        = var.rfc3339
-  depends_on     = [module.avdi.avdLocation]
+  depends_on     = [module.dcr]
 }
 */
 
@@ -65,6 +81,6 @@ module "personal" {
   prefix         = var.prefix
   rfc3339        = var.rfc3339
   pag            = "${var.pag}-${substr(var.avdLocation,0,5)}-${var.prefix}" //var.pag
-  depends_on     = [module.avdi.avdLocation]
+  depends_on     = [module.dcr]
 }
 */
