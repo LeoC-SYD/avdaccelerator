@@ -63,3 +63,8 @@ identity_subscription_id  = "Your Hub Subscription ID"
 avdshared_subscription_id = "Your Hub Subscription ID"
 identity_rg               = "infra-rg"      # identity subscription resource group
 identity_vnet             = "infra-network" # identity subscription vnet name
+
+aadds_domain_name = "contoso.com"
+aadds_username    = "domainjoiner@contoso.com"
+aadds_password    = "P@ssw0rd!"
+ou_path           = "OU=AVD,DC=contoso,DC=com"

@@ -5,6 +5,13 @@ resource "azurerm_resource_group" "rg_storage" {
   tags     = local.tags
 }
 
+# Create a Resource Group for Log Analytics Workspace
+resource "azurerm_resource_group" "rg_avdi" {
+  location = var.avdLocation
+  name     = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_avdi}"
+  tags     = local.tags
+}
+
 # Create a Resource Group for AVD Host Pool, Application Group, Workspace (Service Object)
 resource "azurerm_resource_group" "rg" {
   name     = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_so}"
