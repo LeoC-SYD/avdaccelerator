@@ -1,17 +1,4 @@
 
-resource "time_rotating" "avd_token" {
-  rotation_days = 1
-}
-
-resource "random_string" "AVD_local_password" {
-  count            = var.rdsh_count
-  length           = 16
-  special          = true
-  min_special      = 2
-  override_special = "*!@#?"
-}
-
-
 resource "azurerm_network_interface" "avd_vm_nic" {
   count               = var.rdsh_count
   name                = "${var.prefix}-${count.index + 1}-nic"
@@ -23,7 +10,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
     subnet_id                     = data.azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
   }
-  
+
 
   depends_on = [
     azurerm_resource_group.shrg
@@ -47,9 +34,6 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-
-  /*
-  //source_image_id = data.azurerm_shared_image.avd.id
   source_image_id = "/subscriptions/${var.avdshared_subscription_id}/resourceGroups/${var.image_rg}/providers/Microsoft.Compute/galleries/${var.gallery_name}/images/${var.image_name}/versions/latest"
   depends_on = [
     azurerm_resource_group.shrg,
@@ -57,10 +41,21 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     azurerm_resource_group.rg,
     azurerm_virtual_desktop_host_pool.hostpool
   ]
-*/
   identity {
     type = "SystemAssigned"
   }
+}
+
+resource "random_password" "dc_admin" {
+  length  = 16
+  special = true
+}
+
+resource "azuread_user" "dc_admin" {
+  user_principal_name   = "${var.dc_admin_username}@${var.aadds_domain_name}"
+  display_name          = "AADDS Join Account"
+  password              = random_password.dc_admin.result
+  force_password_change = false
 }
 
 resource "azurerm_virtual_machine_extension" "aaddsjoin" {
@@ -74,7 +69,7 @@ resource "azurerm_virtual_machine_extension" "aaddsjoin" {
 
   settings = <<-SETTINGS
     {
-      "Name": "${azurerm_active_directory_domain_service.aadds.domain_name}",
+      "Name": "${var.aadds_domain_name}",
       "OUPath": "${var.ou_path}",
       "User": "${azuread_user.dc_admin.user_principal_name}",
       "Restart": "true",
@@ -131,7 +126,7 @@ SETTINGS
 PROTECTED_SETTINGS
 
   depends_on = [
-    azurerm_virtual_machine_extension.aadjoin,
+    azurerm_virtual_machine_extension.aaddsjoin,
     azurerm_virtual_desktop_host_pool.hostpool,
     data.azurerm_log_analytics_workspace.lawksp
   ]
@@ -159,7 +154,7 @@ resource "azurerm_virtual_machine_extension" "mma" {
 PROTECTED_SETTINGS
 
   depends_on = [
-    azurerm_virtual_machine_extension.aadjoin,
+    azurerm_virtual_machine_extension.aaddsjoin,
     azurerm_virtual_machine_extension.vmext_dsc,
     data.azurerm_log_analytics_workspace.lawksp
   ]
@@ -176,12 +171,12 @@ resource "azurerm_virtual_machine_extension" "mal" {
   auto_upgrade_minor_version = "true"
 
   depends_on = [
-    azurerm_virtual_machine_extension.aadjoin,
+    azurerm_virtual_machine_extension.aaddsjoin,
     azurerm_virtual_machine_extension.vmext_dsc,
     azurerm_virtual_machine_extension.mma
   ]
 
   lifecycle {
-    
+
   }
 }

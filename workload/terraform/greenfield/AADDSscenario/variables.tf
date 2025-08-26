@@ -216,3 +216,14 @@ variable "fw_policy" {
 variable "hub_dns_zone_rg" {
   description = "The resource group for the hub DNS zone"
 }
+
+variable "aadds_domain_name" {
+  type        = string
+  description = "Name of the Microsoft Entra Domain Services domain"
+}
+
+variable "dc_admin_username" {
+  type        = string
+  description = "Username for the domain join account"
+  default     = "aaddsadmin"
+}

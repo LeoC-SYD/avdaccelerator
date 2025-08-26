@@ -1,11 +1,10 @@
 # Creates Azure Virtual Desktop Insights Log Analytics Workspace
 module "dcr" {
-  source                                                      = "../../modules/insights"
-  name                                                        = "avddcr1"
-  monitor_data_collection_rule_resource_group_name            = azurerm_resource_group.rg.name
-  monitor_data_collection_rule_location                       = azurerm_resource_group.rg.location
-  monitor_data_collection_rule_name                           = "microsoft-avdi-${var.avdLocation}"
-  monitor_data_collection_rule_association_target_resource_id = azurerm_windows_virtual_machine.avd_vm[0].id
+  source                                           = "../../modules/insights"
+  name                                             = "avddcr1"
+  monitor_data_collection_rule_resource_group_name = azurerm_resource_group.rg.name
+  monitor_data_collection_rule_location            = azurerm_resource_group.rg.location
+  monitor_data_collection_rule_name                = "microsoft-avdi-${var.avdLocation}"
   monitor_data_collection_rule_data_flow = [
     {
       destinations = [data.azurerm_log_analytics_workspace.lawksp.name]
@@ -18,8 +17,7 @@ module "dcr" {
       workspace_resource_id = data.azurerm_log_analytics_workspace.lawksp.id
     }
   }
-  resource_group_name = azurerm_resource_group.rg.name
-  target_resource_id  = azurerm_windows_virtual_machine.avd_vm[0].id
+  target_resource_id = azurerm_windows_virtual_machine.avd_vm[0].id
 }
 
 # Creates the Azure Virtual Desktop Spoke Network resources

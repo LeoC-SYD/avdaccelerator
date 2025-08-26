@@ -36,7 +36,7 @@ data "azurerm_role_definition" "power_role" {
 }
 
 data "azuread_service_principal" "spn" {
-  application_id = "9cdead84-a844-4324-93f2-b2e6bb768d07"
+  client_id = "9cdead84-a844-4324-93f2-b2e6bb768d07"
 }
 
 resource "azurerm_role_assignment" "power" {
@@ -172,29 +172,11 @@ resource "azurerm_monitor_diagnostic_setting" "avd-dag2" {
     data.azurerm_log_analytics_workspace.lawksp,
     azurerm_virtual_desktop_application_group.dag
   ]
-  enabled_log {
-    category = "Checkpoint"
 
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "Error"
-
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
-  }
-  enabled_log {
-    category = "Management"
-
-    retention_policy {
-      days    = 7
-      enabled = true
+  dynamic "enabled_log" {
+    for_each = var.dag_log_categories
+    content {
+      category = enabled_log.value
     }
   }
 }
@@ -217,40 +199,3 @@ resource "azurerm_monitor_diagnostic_setting" "avd-ws" {
     }
   }
 }
-/*
-  enabled_log {
-    category = "Checkpoint"
-
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "Error"
-
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
-  }
-  enabled_log {
-    category = "Management"
-
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "Feed"
-
-    retention_policy {
-      days    = 7
-      enabled = true
-    }
-  }
-}
-*/
