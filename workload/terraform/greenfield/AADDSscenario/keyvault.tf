@@ -80,6 +80,7 @@ resource "azurerm_key_vault_secret" "localpassword" {
   content_type = "Password"
 
   lifecycle { ignore_changes = [tags] }
+  depends_on = [azurerm_key_vault_access_policy.deploy]
 }
 
 # Linking DNS Zone to the VNET

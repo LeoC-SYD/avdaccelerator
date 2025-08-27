@@ -131,27 +131,16 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "ws-d
 }
 
 
-# Get Log Analytics Workspace data
-data "azurerm_log_analytics_workspace" "lawksp" {
-  name                = lower(replace("law-avd-${var.prefix}", "-", ""))
-  resource_group_name = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_avdi}"
-
-  depends_on = [
-    azurerm_virtual_desktop_workspace.workspace,
-    azurerm_virtual_desktop_host_pool.hostpool,
-    azurerm_virtual_desktop_application_group.dag,
-    azurerm_virtual_desktop_workspace_application_group_association.ws-dag
-  ]
-}
+# Log Analytics Workspace created separately
 
 # Create Diagnostic Settings for AVD Host Pool
 resource "azurerm_monitor_diagnostic_setting" "avd-hp1" {
   name                       = "diag-avd-${var.prefix}"
   target_resource_id         = azurerm_virtual_desktop_host_pool.hostpool.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.lawksp.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.lawksp.id
 
   depends_on = [
-    data.azurerm_log_analytics_workspace.lawksp,
+    azurerm_log_analytics_workspace.lawksp,
     azurerm_virtual_desktop_host_pool.hostpool
   ]
   dynamic "enabled_log" {
@@ -166,10 +155,10 @@ resource "azurerm_monitor_diagnostic_setting" "avd-hp1" {
 resource "azurerm_monitor_diagnostic_setting" "avd-dag2" {
   name                       = "diag-avd-${var.prefix}"
   target_resource_id         = azurerm_virtual_desktop_application_group.dag.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.lawksp.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.lawksp.id
 
   depends_on = [
-    data.azurerm_log_analytics_workspace.lawksp,
+    azurerm_log_analytics_workspace.lawksp,
     azurerm_virtual_desktop_application_group.dag
   ]
 
@@ -185,10 +174,10 @@ resource "azurerm_monitor_diagnostic_setting" "avd-dag2" {
 resource "azurerm_monitor_diagnostic_setting" "avd-ws" {
   name                       = "diag-avd-${var.prefix}"
   target_resource_id         = azurerm_virtual_desktop_workspace.workspace.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.lawksp.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.lawksp.id
 
   depends_on = [
-    data.azurerm_log_analytics_workspace.lawksp,
+    azurerm_log_analytics_workspace.lawksp,
     azurerm_virtual_desktop_workspace.workspace
   ]
 
