@@ -1,23 +1,25 @@
 module "avdi" {
-  source                                                      = "../insights"
-  resource_group_name                                         = var.resource_group_name
-  name                                                        = var.name
-  monitor_data_collection_rule_data_flow                      = var.monitor_data_collection_rule_data_flow
-  monitor_data_collection_rule_name                           = var.monitor_data_collection_rule_name
-  monitor_data_collection_rule_resource_group_name            = var.monitor_data_collection_rule_resource_group_name
-  monitor_data_collection_rule_location                       = var.monitor_data_collection_rule_location
-  target_resource_id                                          = var.target_resource_id
+  source                                      = "../insights"
+  resource_group_name                         = var.resource_group_name
+  name                                        = var.name
+  monitor_data_collection_rule_data_flow      = var.monitor_data_collection_rule_data_flow
+  monitor_data_collection_rule_name           = var.monitor_data_collection_rule_name
+  monitor_data_collection_rule_resource_group_name = var.monitor_data_collection_rule_resource_group_name
+  monitor_data_collection_rule_location       = var.monitor_data_collection_rule_location
+  target_resource_id                          = var.target_resource_id
   monitor_data_collection_rule_association_target_resource_id = var.monitor_data_collection_rule_association_target_resource_id
-  monitor_data_collection_rule_destinations                   = var.monitor_data_collection_rule_destinations
+  monitor_data_collection_rule_destinations   = var.monitor_data_collection_rule_destinations
 }
 
 data "azurerm_log_analytics_workspace" "lawksp" {
-  name                = lower(replace("log-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}", "-", ""))
+  name                = lower(replace("law-avd-${substr(var.avdLocation, 0, 5)}", "-", ""))
   resource_group_name = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_avdi}"
 
   depends_on = [
+    data.azurerm_log_analytics_workspace.lawksp,
     module.avdi
   ]
+
 }
 
 //  target_resource_type     = "microsoft.desktopvirtualization/hostpools"
