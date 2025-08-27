@@ -7,17 +7,18 @@ module "dcr" {
   monitor_data_collection_rule_name                = "microsoft-avdi-${var.avdLocation}"
   monitor_data_collection_rule_data_flow = [
     {
-      destinations = [data.azurerm_log_analytics_workspace.lawksp.name]
+      destinations = [azurerm_log_analytics_workspace.lawksp.name]
       streams      = ["Microsoft-Perf", "Microsoft-Event"]
     }
   ]
   monitor_data_collection_rule_destinations = {
     log_analytics = {
-      name                  = data.azurerm_log_analytics_workspace.lawksp.name
-      workspace_resource_id = data.azurerm_log_analytics_workspace.lawksp.id
+      name                  = azurerm_log_analytics_workspace.lawksp.name
+      workspace_resource_id = azurerm_log_analytics_workspace.lawksp.id
     }
   }
   target_resource_id = azurerm_windows_virtual_machine.avd_vm[0].id
+  depends_on         = [azurerm_log_analytics_workspace.lawksp]
 }
 
 # Creates the Azure Virtual Desktop Spoke Network resources

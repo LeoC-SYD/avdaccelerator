@@ -18,3 +18,10 @@ resource "azurerm_resource_group" "shrg" {
   location = var.avdLocation
   tags     = local.tags
 }
+
+# Create a Resource Group for monitoring resources
+resource "azurerm_resource_group" "avdirg" {
+  name     = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_avdi}"
+  location = var.avdLocation
+  tags     = local.tags
+}

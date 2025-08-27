@@ -47,12 +47,14 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
 }
 
 resource "random_password" "dc_admin" {
+  count   = var.aadds_password == null ? 1 : 0
   length  = 16
   special = true
 }
 
 resource "azuread_user" "dc_admin" {
-  user_principal_name   = "${local.join_username}@${var.aadds_domain_name}"
+  count                 = var.aadds_username == null ? 1 : 0
+  user_principal_name   = local.join_upn
   display_name          = "AADDS Join Account"
   password              = local.join_password
   force_password_change = false
@@ -71,7 +73,7 @@ resource "azurerm_virtual_machine_extension" "aaddsjoin" {
     {
       "Name": "${var.aadds_domain_name}",
       "OUPath": "${var.ou_path}",
-      "User": "${azuread_user.dc_admin.user_principal_name}",
+      "User": "${local.join_upn}",
       "Restart": "true",
       "Options": "3"
     }
@@ -128,7 +130,7 @@ PROTECTED_SETTINGS
   depends_on = [
     azurerm_virtual_machine_extension.aaddsjoin,
     azurerm_virtual_desktop_host_pool.hostpool,
-    data.azurerm_log_analytics_workspace.lawksp
+    azurerm_log_analytics_workspace.lawksp
   ]
 }
 
@@ -143,20 +145,20 @@ resource "azurerm_virtual_machine_extension" "mma" {
   auto_upgrade_minor_version = true
   settings                   = <<SETTINGS
     {
-      "workspaceId": "${data.azurerm_log_analytics_workspace.lawksp.workspace_id}"
+      "workspaceId": "${azurerm_log_analytics_workspace.lawksp.workspace_id}"
     }
       SETTINGS
 
   protected_settings = <<PROTECTED_SETTINGS
   {
-   "workspaceKey": "${data.azurerm_log_analytics_workspace.lawksp.primary_shared_key}"
+   "workspaceKey": "${azurerm_log_analytics_workspace.lawksp.primary_shared_key}"
   }
 PROTECTED_SETTINGS
 
   depends_on = [
     azurerm_virtual_machine_extension.aaddsjoin,
     azurerm_virtual_machine_extension.vmext_dsc,
-    data.azurerm_log_analytics_workspace.lawksp
+    azurerm_log_analytics_workspace.lawksp
   ]
 }
 
