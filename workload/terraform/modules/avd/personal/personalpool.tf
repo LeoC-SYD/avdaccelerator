@@ -82,14 +82,14 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "ws-d
 
 # Get Log Analytics Workspace data
 data "azurerm_log_analytics_workspace" "lawksp" {
-  name                = lower(replace("log-avd-${var.prefix}", "-", ""))
+  name                = lower(replace("law-avd-${var.prefix}", "-", ""))
   resource_group_name = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_avdi}"
 
   depends_on = [
     azurerm_virtual_desktop_workspace.pworkspace,
     azurerm_virtual_desktop_host_pool.personalpool,
     azurerm_virtual_desktop_application_group.pag,
-    azurerm_virtual_desktop_workspace_application_group_association.ws-dag
+    azurerm_virtual_desktop_workspace_application_group_association.ws-dag,
   ]
 }
 

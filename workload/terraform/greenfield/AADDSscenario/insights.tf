@@ -1,5 +1,5 @@
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = lower(replace("log-avd-${var.prefix}", "-", ""))
+  name                = lower(replace("law-avd-${var.prefix}", "-", ""))
   location            = azurerm_resource_group.rg_avdi.location
   resource_group_name = azurerm_resource_group.rg_avdi.name
   sku                 = "PerGB2018"
