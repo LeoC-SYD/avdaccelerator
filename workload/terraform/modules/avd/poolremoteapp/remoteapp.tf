@@ -47,15 +47,14 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "ws-r
 
 # Get Log Analytics Workspace data
 data "azurerm_log_analytics_workspace" "lawksp" {
-  name                = lower(replace("law-avd-${var.prefix}", "-", ""))
+  name                = lower(replace("log-avd-${var.prefix}", "-", ""))
   resource_group_name = azurerm_resource_group.sh.name
 
   depends_on = [
     azurerm_virtual_desktop_workspace.ragworkspace,
     azurerm_virtual_desktop_host_pool.raghostpool,
     azurerm_virtual_desktop_application_group.raag,
-    azurerm_virtual_desktop_workspace_application_group_association.ws-raag,
-    data.azurerm_log_analytics_workspace.lawksp
+    azurerm_virtual_desktop_workspace_application_group_association.ws-raag
   ]
 }
 
@@ -72,37 +71,37 @@ resource "azurerm_monitor_diagnostic_setting" "avd-hpr" {
   ]
   log_analytics_destination_type = "Dedicated"
 
-  enabled_log  {
+  enabled_log {
     category = "AgentHealthStatus"
 
-      }
+  }
   enabled_log {
     category = "Checkpoint"
-    
+
   }
   enabled_log {
     category = "Connection"
-    
+
   }
   enabled_log {
     category = "Error"
-    
+
   }
   enabled_log {
     category = "HostRegistration"
-    
+
   }
   enabled_log {
     category = "Management"
-    
+
   }
   enabled_log {
     category = "NetworkData"
-    
+
   }
   enabled_log {
     category = "SessionHostManagement"
-    
+
   }
 }
 
@@ -121,20 +120,20 @@ resource "azurerm_monitor_diagnostic_setting" "avd-rag1" {
 
   enabled_log {
     category = "Checkpoint"
-    
+
 
 
   }
 
   enabled_log {
     category = "Error"
-    
+
 
 
   }
   enabled_log {
     category = "Management"
-    
+
 
 
   }
@@ -152,27 +151,27 @@ resource "azurerm_monitor_diagnostic_setting" "avd-wksp2" {
 
   enabled_log {
     category = "Checkpoint"
-    
+
 
 
   }
 
   enabled_log {
     category = "Error"
-    
+
 
 
   }
   enabled_log {
     category = "Management"
-    
+
 
 
   }
 
   enabled_log {
     category = "Feed"
-    
+
 
 
   }

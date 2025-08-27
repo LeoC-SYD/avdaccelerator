@@ -80,6 +80,10 @@ resource "azurerm_key_vault_secret" "localpassword" {
   key_vault_id = azurerm_key_vault.kv.id
   content_type = "Password"
 
+  depends_on = [
+    azurerm_key_vault_access_policy.deploy
+  ]
+
   lifecycle { ignore_changes = [tags] }
 }
 
