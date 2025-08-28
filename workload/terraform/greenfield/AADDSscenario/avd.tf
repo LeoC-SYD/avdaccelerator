@@ -16,7 +16,7 @@ resource "azurerm_virtual_desktop_host_pool" "hostpool" {
   name                     = "${var.hostpool}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"
   friendly_name            = "${var.hostpool}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"
   validate_environment     = true
-  custom_rdp_properties    = "drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:0;targetisaadjoined:i:1;enablerdsaadauth:i:1;autoreconnection enabled:i:1"
+  custom_rdp_properties = local.custom_rdp_properties
   description              = "${var.prefix} Pooled HostPool"
   type                     = "Pooled"
   maximum_sessions_allowed = 16

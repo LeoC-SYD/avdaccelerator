@@ -286,3 +286,15 @@ variable "dc_admin_username" {
   description = "Username for the domain join account (deprecated; use aadds_username)"
   default     = "aaddsadmin"
 }
+
+# Rdp Auth custom properties
+variable "aadds_netbios_domain" {
+  description = "Nom NetBIOS du domaine AAD DS (ex: INTERNAL)"
+  type        = string
+}
+
+variable "enable_webauthn" {
+  description = "Active la redirection WebAuthn (clé FIDO2, etc.)"
+  type        = bool
+  default     = true
+}
