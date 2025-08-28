@@ -1,6 +1,7 @@
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.vnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}-001"
+  name                = "${var.vnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"
   address_space       = var.vnet_range
+  # dns_servers         = var.dns_servers 
   location            = azurerm_resource_group.net.location
   resource_group_name = azurerm_resource_group.net.name
   tags                = local.tags
@@ -13,7 +14,7 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "subnet" {
-  name                 = "${var.snet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}-001"
+  name                 = "${var.snet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"
   resource_group_name  = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}"
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.subnet_range
@@ -24,7 +25,7 @@ resource "azurerm_subnet" "subnet" {
 }
 
 resource "azurerm_subnet" "pesubnet" {
-  name                 = "${var.pesnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}-001"
+  name                 = "${var.pesnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"
   resource_group_name  = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}"
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.pesubnet_range

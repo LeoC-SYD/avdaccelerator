@@ -226,9 +226,13 @@ variable "spoke_subscription_id" {
 
 variable "identity_subscription_id" {
   type        = string
-  description = "Spoke Subscription id"
+  description = "Identity Subscription id"
 }
 
+variable "connectivity_subscription_id" {
+  type        = string
+  description = "Connectivity Subscription id"
+}
 variable "avdshared_subscription_id" {
   type        = string
   description = "Spoke Subscription id"

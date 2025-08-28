@@ -27,14 +27,20 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   provision_vm_agent         = true
   admin_username             = var.local_admin_username
   admin_password             = azurerm_key_vault_secret.localpassword.value
-  encryption_at_host_enabled = true //'Microsoft.Compute/EncryptionAtHost' feature is must be enabled in the subscription for this setting to work https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-host-based-encryption-portal?tabs=azure-powershell
+  encryption_at_host_enabled = false //'Microsoft.Compute/EncryptionAtHost' feature is must be enabled in the subscription for this setting to work https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-host-based-encryption-portal?tabs=azure-powershell
 
   os_disk {
     name                 = "${lower(var.prefix)}-${count.index + 1}"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  source_image_id = "/subscriptions/${var.avdshared_subscription_id}/resourceGroups/${var.image_rg}/providers/Microsoft.Compute/galleries/${var.gallery_name}/images/${var.image_name}/versions/latest"
+  source_image_reference {
+    publisher = "MicrosoftWindowsDesktop"
+    offer = "windows-11"
+    sku = "win11-24h2-avd"
+    version = "26100.3476.250306"
+  }
+  # source_image_id = "/subscriptions/${var.avdshared_subscription_id}/resourceGroups/${var.image_rg}/providers/Microsoft.Compute/galleries/${var.gallery_name}/images/${var.image_name}/versions/latest"
   depends_on = [
     azurerm_resource_group.shrg,
     azurerm_network_interface.avd_vm_nic,
@@ -65,7 +71,7 @@ resource "azurerm_virtual_machine_extension" "aaddsjoin" {
   name                       = "${var.prefix}-${count.index + 1}-aaddsJoin"
   virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Compute"
-  type                       = "JsonADDomainExtensions"
+  type                       = "JsonADDomainExtension"
   type_handler_version       = "1.3"
   auto_upgrade_minor_version = true
 

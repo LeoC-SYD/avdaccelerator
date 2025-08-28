@@ -28,7 +28,9 @@ terraform {
 }
 
 provider "azurerm" {
-  partner_id = "89c34160-547d-11ed-baa8-6fad1bf031a2"
+  partner_id = "49f4cdfa-97bf-4dde-94b0-957dc9321bad"
+  subscription_id = var.spoke_subscription_id
+
   features {
     key_vault {
       purge_soft_deleted_secrets_on_destroy      = false
@@ -67,4 +69,10 @@ provider "azurerm" {
   features {}
   alias           = "identity"
   subscription_id = var.identity_subscription_id
+}
+
+provider "azurerm" {
+  features {}
+  alias = "connectivity"
+  subscription_id = var.connectivity_subscription_id
 }

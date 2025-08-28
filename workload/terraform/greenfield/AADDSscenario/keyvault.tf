@@ -85,6 +85,7 @@ resource "azurerm_key_vault_secret" "localpassword" {
 
 # Linking DNS Zone to the VNET
 resource "azurerm_private_dns_zone_virtual_network_link" "vaultlink" {
+  provider              = azurerm.connectivity
   name                  = "keydnsvnet_link-${var.prefix}"
   resource_group_name   = var.hub_dns_zone_rg
   private_dns_zone_name = data.azurerm_private_dns_zone.pe-vaultdns-zone.name

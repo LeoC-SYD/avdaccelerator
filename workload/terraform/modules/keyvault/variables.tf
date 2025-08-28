@@ -19,7 +19,10 @@ variable "vnet" {
   type        = string
   description = "Name of avd vnet"
 }
-
+variable "allow_list_ip" {
+  type        = string
+  description = "Ip list they can connect to storage account" 
+}
 variable "pesnet" {
   type        = string
   description = "Name of subnet"

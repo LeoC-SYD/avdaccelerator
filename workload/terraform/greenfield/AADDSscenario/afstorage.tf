@@ -81,6 +81,7 @@ resource "azurerm_storage_account_network_rules" "stfw" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "filelink" {
+  provider              = azurerm.connectivity
   name                  = "azfilelink-${var.prefix}"
   resource_group_name   = var.hub_dns_zone_rg
   private_dns_zone_name = data.azurerm_private_dns_zone.pe-filedns-zone.name
