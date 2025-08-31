@@ -51,6 +51,16 @@ hub_subscription_id       = "9cccfd92-8356-48f4-8c82-f269fa037dce"   # subscript
 identity_subscription_id  = "36759938-be1e-42fc-9da0-4c8422a2c12c"   # subscription where identity resources are deployed (If you are using a single subscription for hub and spoke, use the same subscription id as spoke_subscription_id)
 connectivity_subscription_id = "36759938-be1e-42fc-9da0-4c8422a2c12c" # subscription where connectivity resources are deployed
 avdshared_subscription_id = "7efe8b9e-79ce-475b-b3bb-94f77f5c544c"   # optional subscription where shared resources are deployed (If you are using a single subscription for hub and spoke, use the same subscription id as spoke_subscription_id)
+subscription_id          = "7efe8b9e-79ce-475b-b3bb-94f77f5c544c"   # primary subscription ID
+kv_id                    = "/subscriptions/7efe8b9e-79ce-475b-b3bb-94f77f5c544c/resourceGroups/rg-avd-northeurope-syd-service-objects/providers/Microsoft.KeyVault/vaults/kv-avd"
+la_workspace_id          = "/subscriptions/7efe8b9e-79ce-475b-b3bb-94f77f5c544c/resourceGroups/rg-avd-northeurope-syd-monitoring/providers/Microsoft.OperationalInsights/workspaces/law-avd"
+network = {
+  vnet_id = "/subscriptions/7efe8b9e-79ce-475b-b3bb-94f77f5c544c/resourceGroups/rg-avd-northeurope-syd-network/providers/Microsoft.Network/virtualNetworks/vnet-avd"
+  subnets = {
+    session_hosts     = "/subscriptions/7efe8b9e-79ce-475b-b3bb-94f77f5c544c/resourceGroups/rg-avd-northeurope-syd-network/providers/Microsoft.Network/virtualNetworks/vnet-avd/subnets/snet-avd"
+    private_endpoints = "/subscriptions/7efe8b9e-79ce-475b-b3bb-94f77f5c544c/resourceGroups/rg-avd-northeurope-syd-network/providers/Microsoft.Network/virtualNetworks/vnet-avd/subnets/pesnet-avd"
+  }
+}
 tenant_id                 = "c05f7306-c76e-493f-8be0-c73c616ead5e"   # your Azure tenant id
 
 offer      = "windows-11"                             # Offer of the image
