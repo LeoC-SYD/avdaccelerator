@@ -52,9 +52,10 @@ data "azurerm_private_dns_zone" "pe-filedns-zone" {
 
 resource "azurerm_private_endpoint" "afpe" {
   name                = "pe-${local.storage_name}-file"
-  location            = azurerm_resource_group.rg_storage.location
+  # Private Endpoint must be created in the same region as the target subnet (VNet)
+  location            = data.azurerm_virtual_network.vnet.location
   resource_group_name = azurerm_resource_group.rg_storage.name
-  subnet_id           = data.azurerm_subnet.subnet.id
+  subnet_id           = data.azurerm_subnet.pe_subnet.id
   tags                = local.tags
 
   private_service_connection {

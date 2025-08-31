@@ -14,14 +14,14 @@ resource "azurerm_resource_group" "rg" {
 
 # Create a Resource Group for Pool Session Hosts
 resource "azurerm_resource_group" "shrg" {
-  name     = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_pool}"
-  location = var.avdLocation
+  name     = "rg-avd-${substr(coalesce(var.host_location, var.avdLocation), 0, 5)}-${var.prefix}-${var.rg_pool}"
+  location = coalesce(var.host_location, var.avdLocation)
   tags     = local.tags
 }
 
 # Create a Resource Group for monitoring resources
 resource "azurerm_resource_group" "avdirg" {
-  name     = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_avdi}"
-  location = var.avdLocation
+  name     = "rg-avd-${substr(coalesce(var.log_location, var.avdLocation), 0, 5)}-${var.prefix}-${var.rg_avdi}"
+  location = coalesce(var.log_location, var.avdLocation)
   tags     = local.tags
 }

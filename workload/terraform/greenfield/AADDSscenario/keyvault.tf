@@ -45,9 +45,10 @@ data "azurerm_private_dns_zone" "pe-vaultdns-zone" {
 
 resource "azurerm_private_endpoint" "kvpe" {
   name                = "pe-${local.keyvault_name}-vault"
-  location            = azurerm_resource_group.rg.location
+  # Private Endpoint must be created in the same region as the target subnet (VNet)
+  location            = data.azurerm_virtual_network.vnet.location
   resource_group_name = azurerm_resource_group.rg.name
-  subnet_id           = data.azurerm_subnet.subnet.id
+  subnet_id           = data.azurerm_subnet.pe_subnet.id
   tags                = local.tags
 
   lifecycle { ignore_changes = [tags] }

@@ -2,6 +2,25 @@ variable "avdLocation" {
   description = "Location of the resource group."
 }
 
+# Optional overrides to deploy specific components in different regions
+variable "host_location" {
+  type        = string
+  description = "Region for session hosts (and their RG). Falls back to avdLocation when null."
+  default     = null
+}
+
+variable "network_location" {
+  type        = string
+  description = "Region for VNet/network resources. Falls back to avdLocation when null."
+  default     = null
+}
+
+variable "log_location" {
+  type        = string
+  description = "Region for Log Analytics (and its RG). Falls back to avdLocation when null."
+  default     = null
+}
+
 variable "rg_so" {
   type        = string
   description = "Name of the Resource group in which to deploy service objects"
@@ -247,6 +266,12 @@ variable "dag_log_categories" {
 
 variable "ws_log_categories" {
   description = "value of the log categories to be enabled for the host pool"
+}
+
+variable "enable_diagnostics" {
+  type        = bool
+  description = "Create diagnostic settings on AVD resources"
+  default     = true
 }
 
 variable "next_hop_ip" {

@@ -9,7 +9,11 @@ on windows_amd64
 + provider registry.terraform.io/hashicorp/time v0.8.0
 */
 
-avdLocation    = "westeurope"
+avdLocation      = "westeurope"         # default region for AVD service objects
+# Optional: override regions per component
+# host_location    = "northeurope"       # region for session hosts (and their RG)
+# network_location = "northeurope"       # region for VNet/network resources
+# log_location     = "northeurope"       # region for Log Analytics (and its RG)
 rg_shared_name = "shared-resources" #rg-avd-<location>-<prefix>-shared-resources
 rg_network     = "network"          #rg-avd-<location>-<prefix>-network
 rg_stor        = "storage"          #rg-avd-<location>-<prefix>-storage

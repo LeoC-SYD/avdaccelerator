@@ -18,9 +18,9 @@ variable "identity_vnet" {
 }
 
 variable "dns_servers" {
-  type        = string
-  default     = "168.63.129.16"  
-  description = "Custom dns servers of vnet"
+  type        = list(string)
+  default     = ["168.63.129.16"]
+  description = "Custom DNS servers for the VNet (list of IPs)"
 }
 
 variable "vnet" {

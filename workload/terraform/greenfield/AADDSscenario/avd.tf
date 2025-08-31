@@ -135,7 +135,8 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "ws-d
 
 # Create Diagnostic Settings for AVD Host Pool
 resource "azurerm_monitor_diagnostic_setting" "avd-hp1" {
-  name                       = "diag-avd-${var.prefix}"
+  count                      = var.enable_diagnostics ? 1 : 0
+  name                       = "diag-${azurerm_virtual_desktop_host_pool.hostpool.name}-${substr(random_uuid.example.result,0,8)}"
   target_resource_id         = azurerm_virtual_desktop_host_pool.hostpool.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.lawksp.id
 
@@ -153,7 +154,8 @@ resource "azurerm_monitor_diagnostic_setting" "avd-hp1" {
 
 # Create Diagnostic Settings for AVD Desktop App Group
 resource "azurerm_monitor_diagnostic_setting" "avd-dag2" {
-  name                       = "diag-avd-${var.prefix}"
+  count                      = var.enable_diagnostics ? 1 : 0
+  name                       = "diag-${azurerm_virtual_desktop_application_group.dag.name}-${substr(random_uuid.example.result,0,8)}"
   target_resource_id         = azurerm_virtual_desktop_application_group.dag.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.lawksp.id
 
@@ -172,7 +174,8 @@ resource "azurerm_monitor_diagnostic_setting" "avd-dag2" {
 
 # Create Diagnostic Settings for AVD Workspace
 resource "azurerm_monitor_diagnostic_setting" "avd-ws" {
-  name                       = "diag-avd-${var.prefix}"
+  count                      = var.enable_diagnostics ? 1 : 0
+  name                       = "diag-${azurerm_virtual_desktop_workspace.workspace.name}-${substr(random_uuid.example.result,0,8)}"
   target_resource_id         = azurerm_virtual_desktop_workspace.workspace.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.lawksp.id
 

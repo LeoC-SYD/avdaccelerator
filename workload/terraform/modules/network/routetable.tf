@@ -21,4 +21,10 @@ resource "azurerm_route_table" "udr" {
 resource "azurerm_subnet_route_table_association" "udrasso" {
   subnet_id      = azurerm_subnet.subnet.id
   route_table_id = azurerm_route_table.udr.id
+  # Prevent concurrent updates to the same subnet by sequencing after NSG association
+  depends_on = [
+    azurerm_subnet_network_security_group_association.nsg_assoc,
+    azurerm_subnet.subnet,
+    azurerm_route_table.udr
+  ]
 }

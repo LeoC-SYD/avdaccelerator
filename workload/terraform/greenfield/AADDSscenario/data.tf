@@ -19,8 +19,8 @@ resource "random_string" "random" {
 # Get network vnet data
 data "azurerm_virtual_network" "vnet" {
   provider            = azurerm.spoke
-  name                = "${var.vnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"              //var.vnet
-  resource_group_name = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}" //var.rg_network
+  name                = "${var.vnet}-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}"              //var.vnet
+  resource_group_name = "rg-avd-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}-${var.rg_network}" //var.rg_network
 
   depends_on = [
     module.network
@@ -30,9 +30,21 @@ data "azurerm_virtual_network" "vnet" {
 # Get network subnet data
 data "azurerm_subnet" "subnet" {
   provider            = azurerm.spoke
-  name                 = "${var.snet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"              //var.snet
-  resource_group_name  = "rg-avd-${substr(var.avdLocation, 0, 5)}-${var.prefix}-${var.rg_network}" //var.rg_network
-  virtual_network_name = "${var.vnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"              //var.vnet
+  name                 = "${var.snet}-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}"              //var.snet
+  resource_group_name  = "rg-avd-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}-${var.rg_network}" //var.rg_network
+  virtual_network_name = "${var.vnet}-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}"              //var.vnet
+
+  depends_on = [
+    module.network
+  ]
+}
+
+# Get private endpoints subnet data
+data "azurerm_subnet" "pe_subnet" {
+  provider             = azurerm.spoke
+  name                 = "${var.pesnet}-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}"              //var.pesnet
+  resource_group_name  = "rg-avd-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}-${var.rg_network}" //var.rg_network
+  virtual_network_name = "${var.vnet}-${substr(coalesce(var.network_location, var.avdLocation), 0, 5)}-${var.prefix}"              //var.vnet
 
   depends_on = [
     module.network

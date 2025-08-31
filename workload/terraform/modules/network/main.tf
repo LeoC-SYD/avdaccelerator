@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.vnet}-${substr(var.avdLocation, 0, 5)}-${var.prefix}"
   address_space       = var.vnet_range
-  # dns_servers         = var.dns_servers 
+  dns_servers         = var.dns_servers
   location            = azurerm_resource_group.net.location
   resource_group_name = azurerm_resource_group.net.name
   tags                = local.tags
@@ -21,7 +21,7 @@ resource "azurerm_subnet" "subnet" {
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = [azurerm_resource_group.net, azurerm_virtual_network.vnet, azurerm_subnet.subnet]
+  depends_on = [azurerm_resource_group.net, azurerm_virtual_network.vnet]
 }
 
 resource "azurerm_subnet" "pesubnet" {
