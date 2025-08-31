@@ -1,0 +1,326 @@
+variable "avdLocation" {
+  description = "Location of the resource group."
+}
+
+# Optional overrides to deploy specific components in different regions
+variable "host_location" {
+  type        = string
+  description = "Region for session hosts (and their RG). Falls back to avdLocation when null."
+  default     = null
+}
+
+variable "network_location" {
+  type        = string
+  description = "Region for VNet/network resources. Falls back to avdLocation when null."
+  default     = null
+}
+
+variable "log_location" {
+  type        = string
+  description = "Region for Log Analytics (and its RG). Falls back to avdLocation when null."
+  default     = null
+}
+
+variable "rg_so" {
+  type        = string
+  description = "Name of the Resource group in which to deploy service objects"
+}
+
+variable "rg_stor" {
+  type        = string
+  description = "Name of the Resource group in which to deploy storage"
+}
+
+variable "rg_fslogix" {
+  type        = string
+  description = "Name of the Resource group in which to deploy FSLogix storage resources"
+  default     = null
+}
+
+variable "rg_network" {
+  type        = string
+  description = "Name of the Resource group in which to deploy network resources"
+}
+
+variable "rg_pool" {
+  description = "Resource group AVD machines will be deployed to"
+}
+
+variable "rg_avdi" {
+  type        = string
+  description = "Name of the Resource group in which to deploy avd service objects"
+}
+
+variable "identity_rg" {
+  type        = string
+  description = "Name of the Resource group in which to identity resources are deployed"
+}
+
+variable "identity_vnet" {
+  type        = string
+  description = "Name of the vnet in which to identity resources are deployed"
+}
+
+variable "vnet" {
+  type        = string
+  description = "Name of avd vnet"
+}
+
+variable "snet" {
+  type        = string
+  description = "Name of subnet"
+}
+
+variable "pesnet" {
+  type        = string
+  description = "Name of subnet"
+}
+
+variable "hub_connectivity_rg" {
+  type        = string
+  description = "The resource group for AD VM"
+}
+variable "hub_vnet" {
+  type        = string
+  description = "Name of domain controller vnet"
+}
+
+variable "pesubnet_range" {
+  type        = list(string)
+  description = "Address range for private endpoints subnet"
+}
+variable "nsg" {
+  type        = string
+  description = "Name of the nsg"
+}
+
+variable "rt" {
+  type        = string
+  description = "Name of the route table"
+}
+
+variable "dag" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop desktop application group"
+}
+
+variable "scplan" {
+  type        = string
+  description = "Name of the session host scaling plan"
+}
+
+variable "rg_shared_name" {
+  type        = string
+  description = "Name of the Resource group in which to deploy shared resources"
+}
+
+variable "rg_image_name" {
+  type        = string
+  description = "Name of the Resource group in which to deploy image resources"
+}
+
+variable "workspace" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop workspace"
+}
+
+variable "hostpool" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop host pool"
+}
+
+variable "ragworkspace" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop Remote Apps workspace"
+  default     = null
+}
+
+variable "raghostpool" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop Remote Apps host pool"
+  default     = null
+}
+
+variable "rag" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop Remote App group"
+  default     = null
+}
+
+variable "pworkspace" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop personal workspace"
+  default     = null
+}
+
+variable "personalpool" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop personal host pool"
+  default     = null
+}
+
+variable "pag" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop personal application group"
+  default     = null
+}
+
+variable "dns_servers" {
+  type        = list(string)
+  description = "Custom DNS configuration"
+}
+
+variable "vnet_range" {
+  type        = list(string)
+  description = "Address range for deployment VNet"
+}
+variable "subnet_range" {
+  type        = list(string)
+  description = "Address range for session host subnet"
+}
+
+variable "aad_group_name" {
+  type        = string
+  description = "Microsoft Entra ID Group for AVD users"
+}
+
+variable "rdsh_count" {
+  description = "Number of AVD machines to deploy"
+}
+
+variable "prefix" {
+  type        = string
+  description = "Prefix of the name under 5 characters"
+  validation {
+    condition     = length(var.prefix) < 5 && lower(var.prefix) == var.prefix
+    error_message = "The prefix value must be lowercase and < 4 chars."
+  }
+}
+
+variable "session_host_sku" {
+  type        = string
+  description = "Size of the machine to deploy"
+}
+
+variable "local_admin_username" {
+  type        = string
+  description = "local admin username"
+}
+
+variable "ou_path" {
+  type        = string
+  description = "Distinguished name of the organizational unit for the session host"
+  default     = null
+}
+
+variable "image_name" {
+  type        = string
+  description = "Name of the custome image to use"
+}
+
+variable "gallery_name" {
+  type        = string
+  description = "Name of the shared image gallery name"
+}
+
+variable "image_rg" {
+  type        = string
+  description = "Image Gallery resource group"
+}
+
+# Create a storage allow list of IP Addresses
+variable "allow_list_ip" {
+  type        = list(string)
+  description = "List of allowed IP Addresses"
+}
+
+variable "hub_subscription_id" {
+  type        = string
+  description = "Hub Subscription id"
+}
+
+variable "spoke_subscription_id" {
+  type        = string
+  description = "Spoke Subscription id"
+}
+
+variable "identity_subscription_id" {
+  type        = string
+  description = "Identity Subscription id"
+}
+
+variable "connectivity_subscription_id" {
+  type        = string
+  description = "Connectivity Subscription id"
+}
+variable "avdshared_subscription_id" {
+  type        = string
+  description = "Spoke Subscription id"
+}
+variable "host_pool_log_categories" {
+  description = "value of the log categories to be enabled for the host pool"
+}
+
+variable "dag_log_categories" {
+  description = "value of the log categories to be enabled for the host pool"
+}
+
+variable "ws_log_categories" {
+  description = "value of the log categories to be enabled for the host pool"
+}
+
+variable "enable_diagnostics" {
+  type        = bool
+  description = "Create diagnostic settings on AVD resources"
+  default     = true
+}
+
+variable "next_hop_ip" {
+  type        = string
+  description = "Next hop IP address"
+}
+
+variable "fw_policy" {
+  type        = string
+  description = "Name of the firewall policy"
+}
+
+variable "hub_dns_zone_rg" {
+  description = "The resource group for the hub DNS zone"
+}
+
+variable "aadds_domain_name" {
+  type        = string
+  description = "Name of the Microsoft Entra Domain Services domain"
+}
+
+variable "aadds_username" {
+  type        = string
+  description = "Username for the domain join account (alias for dc_admin_username)"
+  default     = null
+}
+
+variable "aadds_password" {
+  type        = string
+  description = "Password for the domain join account. If null, a random password is generated."
+  sensitive   = true
+  default     = null
+}
+
+variable "dc_admin_username" {
+  type        = string
+  description = "Username for the domain join account (deprecated; use aadds_username)"
+  default     = "aaddsadmin"
+}
+
+# Rdp Auth custom properties
+variable "aadds_netbios_domain" {
+  description = "Nom NetBIOS du domaine AAD DS (ex: INTERNAL)"
+  type        = string
+}
+
+variable "enable_webauthn" {
+  description = "Active la redirection WebAuthn (clé FIDO2, etc.)"
+  type        = bool
+  default     = true
+}

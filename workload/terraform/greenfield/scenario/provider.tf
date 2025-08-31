@@ -1,0 +1,82 @@
+terraform {
+  required_version = ">= 1.5.7"
+
+  backend "azurerm" {}
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 3.100.0"
+    }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = ">= 2.48.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.5.0"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = ">= 2.4.0"
+    }
+    azapi = {
+      source  = "Azure/azapi"
+      version = ">= 2.0.0"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = ">= 0.11.0"
+    }
+  }
+}
+
+provider "azurerm" {
+  partner_id      = "49f4cdfa-97bf-4dde-94b0-957dc9321bad"
+  subscription_id = var.spoke_subscription_id
+
+  features {
+    key_vault {
+      purge_soft_deleted_secrets_on_destroy      = false
+      purge_soft_deleted_certificates_on_destroy = false
+      purge_soft_deleted_keys_on_destroy         = false
+      recover_soft_deleted_key_vaults            = true
+      recover_soft_deleted_secrets               = true
+      recover_soft_deleted_certificates          = true
+      recover_soft_deleted_keys                  = true
+    }
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+}
+
+provider "azurerm" {
+  features {}
+  alias           = "hub"
+  subscription_id = var.hub_subscription_id
+}
+
+provider "azurerm" {
+  features {}
+  alias           = "spoke"
+  subscription_id = var.spoke_subscription_id
+}
+
+provider "azurerm" {
+  features {}
+  alias           = "avdshared"
+  subscription_id = var.avdshared_subscription_id
+}
+
+provider "azurerm" {
+  features {}
+  alias           = "identity"
+  subscription_id = var.identity_subscription_id
+}
+
+provider "azurerm" {
+  features {}
+  alias           = "connectivity"
+  subscription_id = var.connectivity_subscription_id
+}
