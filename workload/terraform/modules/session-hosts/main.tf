@@ -63,7 +63,7 @@ resource "azurerm_virtual_machine_extension" "domain_join" {
   virtual_machine_id         = each.value.id
   publisher                  = "Microsoft.Compute"
   type                       = "JsonADDomainExtension"
-  type_handler_version       = "1.3"
+  type_handler_version       = "2.2"
   auto_upgrade_minor_version = true
 
   settings = jsonencode({

@@ -51,20 +51,6 @@ variable "tenant_id" {
   type        = string
 }
 
-variable "subscription_id" {
-  description = "Azure subscription ID"
-  type        = string
-}
-
-variable "kv_id" {
-  description = "Key Vault resource ID for secrets"
-  type        = string
-}
-
-variable "la_workspace_id" {
-  description = "Log Analytics workspace ID"
-  type        = string
-}
 
 variable "image_reference" {
   description = "Session host image reference"
@@ -114,13 +100,6 @@ variable "scaling_plan" {
   default = null
 }
 
-variable "network" {
-  description = "Network configuration"
-  type = object({
-    vnet_id = string
-    subnets = map(string)
-  })
-}
 
 variable "tags" {
   description = "Resource tags"
